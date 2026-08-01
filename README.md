@@ -30,8 +30,8 @@ Implement a project overview feature:
 - Load the generated project data into PostgreSQL. DONE
 - Implement `GET /projects` and `POST /projects` in FastAPI. DONE
 - Implement the Svelte project page.
-- Show the project list sorted by date.
-- Add filtering by project status.
+- Show the project list sorted by date. DONE (On backend)
+- Add filtering by project status. DONE
 
 You may decide the database schema, API payload fields, table columns, and where status filtering happens.
 

@@ -35,9 +35,12 @@ async def health() -> dict[str, str]:
     return {"status": "ok"}
 
 @app.get("/projects", status_code=status.HTTP_200_OK)
-async def get_projects():
+async def get_projects(status: str = None ):
     "Gets all projects on the database"
-    query = "SELECT * FROM projects"
+    if status:
+        query = f"SELECT * FROM projects WHERE status = \u0027{status}\u0027 ORDER BY date DESC"
+    else:
+        query = "SELECT * FROM projects ORDER BY date DESC"
     async with get_connection() as connection:
         async with connection.cursor() as cursor:
             try:   
