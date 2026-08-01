@@ -87,11 +87,11 @@
         <form on:submit|preventDefault={submitProject}>
         <label>
           Project ID
-          <input type="number" bind:value={new_project.id} required>
+          <input type="number" bind:value={new_project.id} min="1" required>
         </label>
         <label>
           Customer_ID
-          <input type="number" bind:value={new_project.customer_id} required>
+          <input type="number" bind:value={new_project.customer_id} min="1" required>
         </label>
         <label>
           Date

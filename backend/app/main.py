@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from app.db import get_connection
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import date
 from app.config import settings
 
@@ -20,8 +20,8 @@ app.add_middleware(
 )
 
 class ProjectCreate(BaseModel):
-    id: int
-    customer_id: int
+    id: int = Field(gt=0)
+    customer_id: int = Field(gt=0)
     date: date
     task: str
     location: str = None
