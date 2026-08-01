@@ -29,7 +29,7 @@ Implement a project overview feature:
 - Create a PostgreSQL schema with a dbmate SQL migration. DONE
 - Load the generated project data into PostgreSQL. DONE
 - Implement `GET /projects` and `POST /projects` in FastAPI. DONE
-- Implement the Svelte project page.
+- Implement the Svelte project page. DONE
 - Show the project list sorted by date. DONE (On backend)
 - Add filtering by project status. DONE
 

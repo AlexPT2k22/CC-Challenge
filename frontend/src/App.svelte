@@ -17,12 +17,54 @@
   }
 
   let projects: projects_interface[] = [];
+  let new_project: projects_interface = {
+    id: 0,
+    customer_id: 0,
+    date: "",
+    task: "",
+    location: null,
+    description: null,
+    status: "",
+  }
 
   async function get_data(){
     const url = status_filter ? `${apiBaseUrl}/projects?status=${status_filter}` : apiBaseUrl+"/projects"
     const request = await fetch(url)
     const data = await request.json()
     projects = data
+  }
+
+  async function submitProject() {
+    try {
+      const request = await fetch(apiBaseUrl + "/projects", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(new_project)
+      })
+
+      if (!request.ok) {
+      const errorData = await request.json();
+      throw new Error(errorData.detail || "Failed to create project");
+      }
+
+      new_project = {
+      id: 0,
+      customer_id: 0,
+      date: "",
+      task: "",
+      location: null,
+      description: null,
+      status: ""
+      };
+
+      get_data()
+      
+    }catch(error){
+      console.error("Error creating project:", error);
+      alert("Failed to create project: " + error);
+    }
   }
 
   onMount(get_data)
@@ -41,11 +83,43 @@
 
   <section class="workbench" aria-label="Projektliste">
     <div class="empty-state">
-      <h2>Projektliste implementieren</h2>
-      <p>
-        Lade die Projekte direkt von der FastAPI, sortiere sie nach Datum und
-        ergaenze einen Statusfilter. </p>
-        <select bind:value={status_filter} on:change={get_data}>
+    <h2>Add a Project</h2>
+        <form on:submit|preventDefault={submitProject}>
+        <label>
+          Project ID
+          <input type="number" bind:value={new_project.id} required>
+        </label>
+        <label>
+          Customer_ID
+          <input type="number" bind:value={new_project.customer_id} required>
+        </label>
+        <label>
+          Date
+          <input type="date" bind:value={new_project.date} required>
+        </label>
+        <label>
+          Task
+          <input type="text" bind:value={new_project.task} required>
+        </label>
+        <label>
+          Location
+          <input type="text" bind:value={new_project.location}>
+        </label>
+        <label>
+          Description
+          <input type="text" bind:value={new_project.description}>
+        </label>
+        <select bind:value={new_project.status} required>
+          <option value="" disabled selected>Select status</option>
+          <option value="open">Open</option>
+          <option value="in progress">In progress</option>
+          <option value="done">Done</option>
+        </select>
+        <button type="submit">Add Project</button>
+        </form>
+
+        <h2>List of all {projects.length} projects</h2>
+        <select class="select_button" bind:value={status_filter} on:change={get_data}>
           <option value="">All statuses</option>
           <option value="open">Open</option>
           <option value="in progress">In progress</option>
