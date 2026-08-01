@@ -1,4 +1,5 @@
 # Sewage Pipe Project Challenge
+[![wakatime](https://wakatime.com/badge/user/018b251f-0e34-47a2-be9d-82c5e052e073/project/9933f327-9f89-4fa3-9f83-e81d49dfdf0d.svg)](https://wakatime.com/badge/user/018b251f-0e34-47a2-be9d-82c5e052e073/project/9933f327-9f89-4fa3-9f83-e81d49dfdf0d)
 
 Implementation of the project: schema, migrations, data import, FastAPI endpoints, and a Svelte frontend to visualize and manage sewage pipe projects.
 
