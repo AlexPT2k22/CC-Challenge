@@ -25,10 +25,10 @@ The backend and frontend directories are mounted into their containers. Changes 
 
 Implement a project overview feature:
 
-- Generate the source data.
-- Create a PostgreSQL schema with a dbmate SQL migration.
-- Load the generated project data into PostgreSQL.
-- Implement `GET /projects` and `POST /projects` in FastAPI.
+- Generate the source data. DONE
+- Create a PostgreSQL schema with a dbmate SQL migration. DONE
+- Load the generated project data into PostgreSQL. DONE
+- Implement `GET /projects` and `POST /projects` in FastAPI. DONE
 - Implement the Svelte project page.
 - Show the project list sorted by date.
 - Add filtering by project status.
