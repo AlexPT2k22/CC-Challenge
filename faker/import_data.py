@@ -7,7 +7,7 @@ from psycopg import connect
 DATA_DIR = Path(os.environ.get("DATA_DIR", "data"))
 DATABASE_URL = os.environ.get(
     "DATABASE_URL",
-    "postgres://challenge:challenge@postgres:5432/challenge?sslmode=disable",
+    "postgres://challenge:challenge@postgres:15432/challenge?sslmode=disable",
 )
 
 
@@ -23,13 +23,14 @@ def main() -> None:
 
     with connect(DATABASE_URL) as connection:
         with connection.cursor() as cursor:
-            #
-            # Example shape:
-            # cursor.execute(
-            #     "insert into ... values (%s, %s)",
-            #     (value_1, value_2),
-            # )
-            pass
+            for c in customers:
+                cursor.execute(
+                    'INSERT INTO customers (id, name, street, postal_code, municipality) VALUES (%s, %s, %s, %s, %s)', (c['id'], c['name'], c['street'], c["postal_code"], c['municipality'])
+                )
+            for p in projects:
+                cursor.execute(
+                    'INSERT INTO projects (id, customer_id, date, task, location, description, status) VALUES (%s, %s, %s, %s, %s, %s, %s)', (p['id'], p['customer_id'], p['date'], p['task'], p['location'], p['description'], p['status'])
+                )
 
         connection.commit()
 
