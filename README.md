@@ -1,152 +1,54 @@
 # Sewage Pipe Project Challenge
 
-Welcome to the Sewage Pipe Project Challenge.
+Implementation of the project: schema, migrations, data import, FastAPI endpoints, and a Svelte frontend to visualize and manage sewage pipe projects.
 
-You are tasked with building an app that visualizes sewage pipe projects and their statuses.
-
-The stack is already wired with Docker Compose, so you can focus on the challenge itself. The stack includes:
+## Stack
 
 - PostgreSQL 17
 - FastAPI
-- Svelte with Vite and TypeScript
-- Adminer
-- dbmate
-- Faker data generation
+- Svelte + Vite + TypeScript
 
-If you have not used Docker before, the helper containers are there to make the setup easier:
+## Architecture & Decisions
 
-- The Adminer UI is accessible at `http://localhost:8080`. You can use it to inspect and edit the database if you do not have a preferred SQL client.
-- The dbmate container manages database migrations, so you can create, apply, and roll back your database schema without manual resets.
-- The Faker container can be used to generate dummy data that you should use to populate the database.
+### Database schema
 
-The backend and frontend directories are mounted into their containers. Changes you make in those folders are reflected inside the running containers, and the development servers should reload when file changes are detected. Work in these directories while the Docker containers are running.
+![Database schema](DB.svg)
 
-## Task
+- `id` and `customer_id` use the `INTEGER` values from the generated data instead of generating new UUIDs.
+- `postal_code` is stored as `VARCHAR`, not `INTEGER`, because of zeros on the left
+- `location` and `description` are nullable according to faker data.
+- `id` and `customer_id` are positive numbers to prevent weird data on the database.
 
-Implement a project overview feature:
+### API (`FastAPI`)
 
-- Generate the source data. DONE
-- Create a PostgreSQL schema with a dbmate SQL migration. DONE
-- Load the generated project data into PostgreSQL. DONE
-- Implement `GET /projects` and `POST /projects` in FastAPI. DONE
-- Implement the Svelte project page. DONE
-- Show the project list sorted by date. DONE (On backend)
-- Add filtering by project status. DONE
+- `GET /projects` returns all projects, ordered by `date DESC`. Accepts an optional `?status=` query parameter to filter by status.
+- `POST /projects` creates a new project. Validates `id` and `customer_id` as positive integers via Pydantic.
 
-You may decide the database schema, API payload fields, table columns, and where status filtering happens.
+### Frontend (Svelte)
 
-## Setup
+- Single-page view: project table (already sorted by date, filterable by status) plus a form to add new projects.
+- Filtering re-queries the API with `?status=` rather than filtering client-side.
 
-Requirements:
+## Running the project
 
-- Docker
-- Docker Compose
-- Make
-
-Start the stack:
-
-```sh
+```bash
 make up
-```
-
-Generate source data:
-
-```sh
 make data
-```
-
-Create or edit your SQL migration in `database/migrations/`, then apply it:
-
-```sh
 make migrate-up
-```
-
-After your schema exists, use `faker/import_data.py` as a starting point for importing the generated JSON data into PostgreSQL. The script loads the generated files and connects to the database, but you need to add the insert SQL for your schema.
-
-```sh
 make import-data
 ```
 
-Reset the database:
+If default ports are already in use locally:
 
-```sh
-make reset
-```
-
-## Local URLs
-
-- Frontend: `http://localhost:5173`
-- API: `http://localhost:8000`
-- API docs: `http://localhost:8000/docs`
-- Adminer: `http://localhost:8080`
-- PostgreSQL: `localhost:5432`
-
-If a default port is already in use on your machine, override it before starting the stack:
-
-```sh
+```bash
 POSTGRES_PORT=15432 ADMINER_PORT=18080 make up
 ```
 
-## Database Login
+- Frontend: http://localhost:5173
+- API docs: http://localhost:8000/docs
+- Adminer: http://localhost:8080 (or the overridden port)
 
-Use these values for PostgreSQL and Adminer:
+## Screenshots
 
-- System: `PostgreSQL`
-- Server: `postgres`
-- Database: `challenge`
-- Username: `challenge`
-- Password: `challenge`
-
-When connecting from a host-side database tool, use `localhost` as the server.
-
-## Useful Commands
-
-```sh
-make up              # start the stack
-make down            # stop the stack
-make logs            # follow service logs
-make reset           # remove database volume and restart PostgreSQL
-make data            # generate customer and project source data
-make import-data     # run the starter Python import script
-make migrate-new     # create a new dbmate migration named initial-schema
-make migrate-up      # apply migrations
-make migrate-down    # roll back the latest migration
-make migrate-status  # show migration status
-```
-
-## Adding Packages
-
-If you add a backend package, update `backend/pyproject.toml`, then rebuild and restart the backend container:
-
-```sh
-docker compose up --build backend
-```
-
-If you add a frontend package, update `frontend/package.json`, then rebuild and restart the frontend container:
-
-```sh
-docker compose up --build frontend
-```
-
-The frontend uses a Docker volume for `node_modules`. If a newly added frontend package is still missing after rebuilding, remove that volume and start the frontend again:
-
-```sh
-docker compose down
-docker volume rm cc-challenge_frontend_node_modules
-docker compose up --build frontend
-```
-
-Avoid `docker compose down -v` unless you want to delete the PostgreSQL data volume too.
-
-## Service Docs
-
-- [Backend](./backend/README.md)
-- [Frontend](./frontend/README.md)
-- [Database](./database/README.md)
-- [Faker Data](./faker/README.md)
-
-## Submission
-
-Submit either a Git repository or a zip archive via email.
-
-Have fun!
+![Frontend](image.png)
+![SwaggerUI](image2.png)
